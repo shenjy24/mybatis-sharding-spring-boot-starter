@@ -88,3 +88,40 @@ sharding:
           sql:
             show: true
 ```
+
+以下是主从配置，不进行分库分表
+```yaml
+sharding:
+  jdbc:
+    # 配置数据源
+    datasource:
+      names: master0,slave0,slave1
+      master0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/tradedb1?nullNamePatternMatchesAll=true&useSSL=false
+        username: root
+        password: 
+      slave0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/tradedb2?nullNamePatternMatchesAll=true&useSSL=false
+        username: root
+        password: 
+      slave1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/tradedb3?nullNamePatternMatchesAll=true&useSSL=false
+        username: root
+        password: 
+    config:
+      masterslave:
+          load-balance-algorithm-type: random
+          name: ms
+          master-data-source-name: master0
+          slave-data-source-names: slave0,slave1
+      props:
+          # 打印sql日志
+          sql:
+            show: true
+```
